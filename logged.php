@@ -12,15 +12,9 @@
         if($_SERVER["REQUEST_METHOD"] == "POST")
         {
             # TODO Dodać walidację pól
-            $imie = $_POST["imie"];
-            $nazwisko = $_POST["nazwisko"];
             $email = $_POST["email"];
-            $passwordFirst = $_POST["passwordFirst"];
-            $passwordSecond = $_POST["passwordSecond"];
-            if($passwordFirst == $passwordSecond)
-            {
-                $password = $passwordFirst;
-            }
+            $password = $_POST["password"];
+
             # baza danych
             $serverName = "127.0.0.1";
             $userName = "root";
