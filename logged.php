@@ -9,6 +9,7 @@
 </head>
 <body>
     <?php
+        session_start();
         if($_SERVER["REQUEST_METHOD"] == "POST")
         {
             # TODO Dodać walidację pól
@@ -27,14 +28,17 @@
             {
                 echo "Błąd";
             } 
-            $sql = "SELECT `hasło` FROM `users` WHERE `email` = '$email';";
+            $sql = "SELECT `id`, `hasło` FROM `users` WHERE `email` = 'mail';";
             $result = $connect->query($sql);
             if ($result->num_rows > 0) 
             {
                 $row = $result->fetch_assoc();
+                $id = $row["id"];
                 if($row["hasło"] == $password)
                 {
                     echo "zalogowano";
+                    $_SESSION["id"] = $id;
+                    header("Location: index.php");
                 }
                 else
                 {
