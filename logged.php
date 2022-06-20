@@ -27,10 +27,23 @@
             {
                 echo "Błąd";
             } 
-            $sql = "INSERT INTO `users` (`id`, `Imię`, `Nazwisko`, `Email`, `Hasło`, `Uprawnienia`) VALUES (NULL, '$imie', '$nazwisko', '$email', '$password', '0');";
-            if($connect->query($sql) === TRUE)
+            $sql = "SELECT `hasło` FROM `users` WHERE `email` = '$email';";
+            $result = $connect->query($sql);
+            if ($result->num_rows > 0) 
             {
-                echo "Sukces";
+                $row = $result->fetch_assoc();
+                if($row["hasło"] == $password)
+                {
+                    echo "zalogowano";
+                }
+                else
+                {
+                    echo "Niepoprawne hasło";
+                }
+            } 
+            else 
+            {
+                echo "Nie istnieje takie konto";
             }
             $connect->close();
         }
