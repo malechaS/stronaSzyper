@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav>
+        <a href="rejestracja.html">rejestracja</a>
+        <a href="logowanie.html">logowanie</a>
+        <a href="index.php">index</a>
+        <a href="przelew.html">przelew</a>
+        <a href="historia.php">historia</a>
+    </nav>
     <?php
         session_start();
         # baza danych
@@ -23,17 +30,19 @@
             echo "Błąd";
         } 
         $id = $_SESSION["id"];
-        $_SESSION["saldo"] = $row["Stan_konta"];
-
+        
         $sql = "SELECT `Stan_konta`, `Imię` FROM `users` WHERE `id` = '$id';";
+        
         $result = $connect->query($sql);
         $row = $result->fetch_assoc();
+        $_SESSION["saldo"] = $row["Stan_konta"];
+
         $saldo = $row["Stan_konta"];
         $imie = $row["Imię"];
         echo <<<HEREDOC
         Witaj $imie! <br>
-        Twoje saldo wynosi: $saldo<br>
-        <a href="przelew.php">Przelew</a><br>
+        Twoje saldo wynosi: $saldo PLN<br>
+        <a href="przelew.html">Przelew</a><br>
         <a href="historia.php">Pełna historia</a>
         HEREDOC;
         $connect->close();

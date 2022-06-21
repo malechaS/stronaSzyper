@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav>
+        <a href="rejestracja.html">rejestracja</a>
+        <a href="logowanie.html">logowanie</a>
+        <a href="index.php">index</a>
+        <a href="przelew.html">przelew</a>
+        <a href="historia.php">historia</a>
+    </nav>
     <?php
         if($_SERVER["REQUEST_METHOD"] == "POST")
         {

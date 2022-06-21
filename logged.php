@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav>
+        <a href="rejestracja.html">rejestracja</a>
+        <a href="logowanie.html">logowanie</a>
+        <a href="index.php">index</a>
+        <a href="przelew.html">przelew</a>
+        <a href="historia.php">historia</a>
+    </nav>
     <?php
         session_start();
         if($_SERVER["REQUEST_METHOD"] == "POST")
@@ -28,12 +35,13 @@
             {
                 echo "Błąd";
             } 
-            $sql = "SELECT `id`, `hasło` FROM `users` WHERE `email` = 'mail';";
+            $sql = "SELECT `id`, `hasło` FROM `users` WHERE `email` = '$email';";
             $result = $connect->query($sql);
             if ($result->num_rows > 0) 
             {
                 $row = $result->fetch_assoc();
                 $id = $row["id"];
+                echo $row["hasło"];
                 if($row["hasło"] == $password)
                 {
                     echo "zalogowano";
@@ -50,6 +58,7 @@
                 echo "Nie istnieje takie konto";
             }
             $connect->close();
+            echo $_SESSION["id"];
         }
     ?>
 </body>

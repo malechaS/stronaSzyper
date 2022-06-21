@@ -9,15 +9,13 @@
 </head>
 <body>
     <header></header>
-    <nav></nav>
-    <section>
-        <form action="przelew.php" method="post">
-            <label for="nadawca">E-mail odbiorcy</label>
-            <input type="text" name="email" id="">
-            <label for="kwota">Kwota</label>
-            <input type="number" step="0.01" name="kwota" id="">
-            <input type="submit" value="Wyślij" id="button">
-        </form>
+    <nav>
+        <a href="rejestracja.html">rejestracja</a>
+        <a href="logowanie.html">logowanie</a>
+        <a href="index.php">index</a>
+        <a href="przelew.html">przelew</a>
+        <a href="historia.php">historia</a>
+    </nav>
         <?php
         session_start();
         if($_SERVER["REQUEST_METHOD"] == "POST")
@@ -26,9 +24,8 @@
 
             $odbiorca = $_POST["email"];
             $kwota = $_POST["kwota"];
-            $nadawca = $_SESSION["id"];
+            $nadawcaID = $_SESSION["id"];
             $currentDATATIME = date("Y-m-d h:i:s");
-            $saldo = $_SESSION["saldo"] + $_POST["kwota"];
 
             # baza danych
             $serverName = "127.0.0.1";
@@ -43,12 +40,19 @@
             {
                 echo "Błąd";
             } 
-            $sql = "SELECT `id` FROM `users` WHERE `Email` = '$odbiorca';";
+            # nadawca
+            $sql = "SELECT `Stan_konta` FROM `users` WHERE `id` = '$nadawcaID';";
+            $result = $connect->query($sql);
+            $row = $result->fetch_assoc();
+            $saldoNadawcy = $row["Stan_konta"] - $_POST["kwota"];
+
+            $sql = "SELECT `id`, `Stan_konta` FROM `users` WHERE `Email` = '$odbiorca';";
             $result = $connect->query($sql);
             $row = $result->fetch_assoc();
             $odbiorcaID = $row["id"];
+            $saldoOdbiorcy = $row["Stan_konta"] + $_POST["kwota"];
 
-            $sql = "INSERT INTO `transactions`(`nadawca`, `odbiorca`, `kwota`, `data`) VALUES ('$nadawca','$odbiorcaID','$kwota','$currentDATATIME');";
+            $sql = "INSERT INTO `transactions`(`nadawca`, `odbiorca`, `kwota`, `data`) VALUES ('$nadawcaID','$odbiorcaID','$kwota','$currentDATATIME');";
             $sql .= "UPDATE `users` SET `Stan_konta`='$saldoOdbiorcy' WHERE `id` = '$odbiorcaID';";
             $sql .= "UPDATE `users` SET `Stan_konta`='$saldoNadawcy' WHERE `id` = '$nadawcaID';";
             if($connect->multi_query($sql) === TRUE)

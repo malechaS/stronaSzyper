@@ -6,8 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strona</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        table, tr, td, th {
+            border: solid 1px black;
+        }
+    </style>
 </head>
 <body>
+    <nav>
+        <a href="rejestracja.html">rejestracja</a>
+        <a href="logowanie.html">logowanie</a>
+        <a href="index.php">index</a>
+        <a href="przelew.html">przelew</a>
+        <a href="historia.php">historia</a>
+    </nav>
     <?php
         session_start();
         # baza danych
@@ -24,20 +36,41 @@
         } 
         $id = $_SESSION["id"];
 
-        $sql = "SELECT `Stan_konta`, `Imię` FROM `users` WHERE `id` = '$id';";
+        $sql = "SELECT `email`, `kwota`, `data` FROM `transactions` INNER JOIN `users` ON `users`.`id` = `transactions`.`odbiorca` WHERE `transactions`.`nadawca` = '$id';";
         $result = $connect->query($sql);
-        $row = $result->fetch_assoc();
-        $saldo = $row["Stan_konta"];
-        $imie = $row["Imię"];
-        echo <<<HEREDOC
-        Witaj $imie! <br>
-        Twoje saldo wynosi: $saldo<br>
-        <a href="przelew.php">Przelew</a>
-        <a href="historia.php">Pełna historia</a>
-        HEREDOC;
+        if($result->num_rows > 0)
+        {
+            echo <<<HEREDOC
+            <table>
+                    <tr>
+                        <th>Email</th>
+                        <th>Kwota</th>
+                        <th>Data</th>
+                    </tr>
+            HEREDOC;
+            while($row = $result->fetch_assoc())
+            {
+                $email = $row["email"];
+                $kwota = $row["kwota"];
+                $data = $row["data"];
+                echo <<<HEREDOC
+                
+                    <tr>
+                        <td>$email</td>
+                        <td>$kwota</td>
+                        <td>$data</td>
+                    </tr>
+                HEREDOC;
+            }
+            echo "</table>";
+        }
+        else
+        {
+            echo "Brak historii.";
+        }
+        
         $connect->close();
 
     ?>
-    
 </body>
 </html>

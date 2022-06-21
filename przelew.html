@@ -17,18 +17,12 @@
         <a href="historia.php">historia</a>
     </nav>
     <section>
-        <form action="userAdd.php" method="post">
-            <label for="imie">Imię</label>
-            <input type="text" name="imie">
-            <label for="nazwisko">Nazwisko</label>
-            <input type="text" name="nazwisko">
-            <label for="email">E-mail</label>
+        <form action="przelew.php" method="post">
+            <label for="nadawca">E-mail odbiorcy</label>
             <input type="text" name="email" id="">
-            <label for="password">Hasło</label>
-            <input type="password" name="passwordFirst" id="">
-            <label for="password">Powtórz hasło</label>
-            <input type="password" name="passwordSecond" id="">
-            <input type="submit" value="Zarejestruj" id="button">
+            <label for="kwota">Kwota</label>
+            <input type="number" step="0.01" name="kwota" id="">
+            <input type="submit" value="Wyślij" id="button">
         </form>
     </section>
 </body>
