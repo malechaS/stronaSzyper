@@ -26,7 +26,7 @@
         $serverName = "127.0.0.1";
         $userName = "root";
         $userPassword = "";
-        $databaseName = "sklep";
+        $databaseName = "bank";
 
         $connect = new mysqli($serverName, $userName, $userPassword, $databaseName);
 
@@ -36,7 +36,9 @@
         } 
         $id = $_SESSION["id"];
 
-        $sql = "SELECT `email`, `kwota`, `data` FROM `transactions` INNER JOIN `users` ON `users`.`id` = `transactions`.`odbiorca` WHERE `transactions`.`nadawca` = '$id';";
+        $sql = "SELECT `email`, `transactions`.`kwota`, `transactions`.`data` FROM `transactions` 
+        INNER JOIN `users` ON `users`.`id` = `transactions`.`idOdbiorcy` 
+        WHERE `transactions`.`idNadawcy` = '$id';";
         $result = $connect->query($sql);
         if($result->num_rows > 0)
         {

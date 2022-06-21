@@ -26,13 +26,13 @@
             $passwordSecond = $_POST["passwordSecond"];
             if($passwordFirst == $passwordSecond)
             {
-                $password = $passwordFirst;
+                $password = password_hash($passwordFirst, PASSWORD_DEFAULT);
             }
             # baza danych
             $serverName = "127.0.0.1";
             $userName = "root";
             $userPassword = "";
-            $databaseName = "sklep";
+            $databaseName = "bank";
 
             $connect = new mysqli($serverName, $userName, $userPassword, $databaseName);
 
@@ -40,7 +40,7 @@
             {
                 echo "Błąd";
             } 
-            $sql = "INSERT INTO `users` (`id`, `Imię`, `Nazwisko`, `Email`, `Hasło`, `Uprawnienia`) VALUES (NULL, '$imie', '$nazwisko', '$email', '$password', '0');";
+            $sql = "INSERT INTO `users` (`id`, `imie`, `nazwisko`, `email`, `haslo`, `uprawnienia`) VALUES (NULL, '$imie', '$nazwisko', '$email', '$password', '0');";
             if($connect->query($sql) === TRUE)
             {
                 echo "Sukces";

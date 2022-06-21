@@ -21,7 +21,7 @@
         $serverName = "127.0.0.1";
         $userName = "root";
         $userPassword = "";
-        $databaseName = "sklep";
+        $databaseName = "bank";
 
         $connect = new mysqli($serverName, $userName, $userPassword, $databaseName);
 
@@ -31,14 +31,14 @@
         } 
         $id = $_SESSION["id"];
         
-        $sql = "SELECT `Stan_konta`, `Imię` FROM `users` WHERE `id` = '$id';";
+        $sql = "SELECT `stanKonta`, `imie` FROM `users` WHERE `id` = '$id';";
         
         $result = $connect->query($sql);
         $row = $result->fetch_assoc();
-        $_SESSION["saldo"] = $row["Stan_konta"];
+        $_SESSION["saldo"] = $row["stanKonta"];
 
-        $saldo = $row["Stan_konta"];
-        $imie = $row["Imię"];
+        $saldo = $row["stanKonta"];
+        $imie = $row["imie"];
         echo <<<HEREDOC
         Witaj $imie! <br>
         Twoje saldo wynosi: $saldo PLN<br>

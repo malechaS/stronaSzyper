@@ -31,7 +31,7 @@
             $serverName = "127.0.0.1";
             $userName = "root";
             $userPassword = "";
-            $databaseName = "sklep";
+            $databaseName = "bank";
 
 
             $connect = new mysqli($serverName, $userName, $userPassword, $databaseName);
@@ -41,23 +41,30 @@
                 echo "Błąd";
             } 
             # nadawca
-            $sql = "SELECT `Stan_konta` FROM `users` WHERE `id` = '$nadawcaID';";
+            $sql = "SELECT `stanKonta` FROM `users` WHERE `id` = '$nadawcaID';";
             $result = $connect->query($sql);
             $row = $result->fetch_assoc();
-            $saldoNadawcy = $row["Stan_konta"] - $_POST["kwota"];
+            $saldoNadawcy = $row["stanKonta"] - $_POST["kwota"];
 
-            $sql = "SELECT `id`, `Stan_konta` FROM `users` WHERE `Email` = '$odbiorca';";
-            $result = $connect->query($sql);
-            $row = $result->fetch_assoc();
-            $odbiorcaID = $row["id"];
-            $saldoOdbiorcy = $row["Stan_konta"] + $_POST["kwota"];
-
-            $sql = "INSERT INTO `transactions`(`nadawca`, `odbiorca`, `kwota`, `data`) VALUES ('$nadawcaID','$odbiorcaID','$kwota','$currentDATATIME');";
-            $sql .= "UPDATE `users` SET `Stan_konta`='$saldoOdbiorcy' WHERE `id` = '$odbiorcaID';";
-            $sql .= "UPDATE `users` SET `Stan_konta`='$saldoNadawcy' WHERE `id` = '$nadawcaID';";
-            if($connect->multi_query($sql) === TRUE)
+            if($saldoNadawcy >= 0)
             {
-                echo "Przelew został wykonany";
+                $sql = "SELECT `id`, `stanKonta` FROM `users` WHERE `email` = '$odbiorca';";
+                $result = $connect->query($sql);
+                $row = $result->fetch_assoc();
+                $odbiorcaID = $row["id"];
+                $saldoOdbiorcy = $row["stanKonta"] + $_POST["kwota"];
+
+                $sql = "INSERT INTO `transactions`(`idNadawcy`, `idOdbiorcy`, `kwota`, `data`) VALUES ('$nadawcaID','$odbiorcaID','$kwota','$currentDATATIME');";
+                $sql .= "UPDATE `users` SET `stanKonta`='$saldoOdbiorcy' WHERE `id` = '$odbiorcaID';";
+                $sql .= "UPDATE `users` SET `stanKonta`='$saldoNadawcy' WHERE `id` = '$nadawcaID';";
+                if($connect->multi_query($sql) === TRUE)
+                {
+                    echo "Przelew został wykonany";
+                }
+            }
+            else
+            {
+                echo "Brak środków na koncie.";
             }
             $connect->close();
         }

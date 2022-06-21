@@ -27,7 +27,7 @@
             $serverName = "127.0.0.1";
             $userName = "root";
             $userPassword = "";
-            $databaseName = "sklep";
+            $databaseName = "bank";
 
             $connect = new mysqli($serverName, $userName, $userPassword, $databaseName);
 
@@ -35,14 +35,16 @@
             {
                 echo "Błąd";
             } 
-            $sql = "SELECT `id`, `hasło` FROM `users` WHERE `email` = '$email';";
+            $sql = "SELECT `id`, `haslo` FROM `users` WHERE `email` = '$email';";
             $result = $connect->query($sql);
             if ($result->num_rows > 0) 
             {
                 $row = $result->fetch_assoc();
                 $id = $row["id"];
-                echo $row["hasło"];
-                if($row["hasło"] == $password)
+                echo $row["haslo"];
+                echo "<br>";
+                echo $password;
+                if(password_verify($row["haslo"], $password))
                 {
                     echo "zalogowano";
                     $_SESSION["id"] = $id;
