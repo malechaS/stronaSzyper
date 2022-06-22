@@ -1,11 +1,30 @@
 body{
     background-color: gray;
-
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
 }
-section{
+header, nav, section {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+nav {
     display: flex;
-    justify-self: center;
     align-items: center;
+    justify-content:right;
+    width: 1000px;
+    height: 100px;
+    margin-bottom: 50px;
+}
+a {
+    color: black;
+    text-decoration: none;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 5px 15px;
+    margin-left: 10px;
+}
+section {
     margin: 0 auto;
     width: 1000px;
     height: auto;
@@ -27,8 +46,6 @@ form > input {
     margin: 10px;
 }
 form > label {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 500;
     justify-self: start;
 }
 #button {

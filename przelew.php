@@ -8,16 +8,44 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header></header>
-    <nav>
-        <a href="rejestracja.html">rejestracja</a>
-        <a href="logowanie.html">logowanie</a>
-        <a href="index.php">index</a>
-        <a href="przelew.html">przelew</a>
-        <a href="historia.php">historia</a>
-    </nav>
+    <header>
+        <h1>Bank</h1>
+    </header>
         <?php
         session_start();
+        if(isset($_SESSION["email"]))
+        {
+            echo <<<ZALOGOWANY
+                <nav>
+                    <a href="index.php">Strona główna</a>
+                    <a href="przelew.php">Przelew</a>
+                    <a href="historia.php">Historia transakcji</a>
+                    <a href="logowanie.php">Wyloguj</a>
+                </nav>
+            <section>
+                <h2>Formularz przelewu</h2>
+                <form action="przelew.php" method="post">
+                    <label for="nadawca">E-mail odbiorcy</label>
+                    <input type="text" name="email" id="">
+                    <label for="kwota">Kwota</label>
+                    <input type="number" step="0.01" name="kwota" id="">
+                    <input type="submit" value="Wyślij" id="button">
+                </form>
+            ZALOGOWANY;
+        }
+        else
+        {
+            echo <<<NIEZALOGOWANY
+            <nav>
+                <a href="index.php">Strona główna</a>
+                <a href="logowanie.php">Logowanie</a>
+                <a href="rejestracja.php">Rejestracja</a>
+            </nav>
+            <section>
+                <p>Nie masz dostępu do tej strony. <a href="logowanie.php">Zaloguj się</a></p>
+            </section>
+            NIEZALOGOWANY;
+        }
         if($_SERVER["REQUEST_METHOD"] == "POST")
         {
             date_default_timezone_set("Europe/Warsaw");
@@ -67,6 +95,7 @@
                 echo "Brak środków na koncie.";
             }
             $connect->close();
+            echo "</section>";
         }
         ?>
     </section>

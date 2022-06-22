@@ -8,15 +8,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav>
-        <a href="rejestracja.html">rejestracja</a>
-        <a href="logowanie.html">logowanie</a>
-        <a href="index.php">index</a>
-        <a href="przelew.html">przelew</a>
-        <a href="historia.php">historia</a>
-    </nav>
+    <header>
+        <h1>Bank</h1>
+    </header>
     <?php
-        session_start();
+    session_start();
+    if(isset($_SESSION["email"]))
+    {
+        echo <<<ZALOGOWANY
+            <nav>
+                <a href="index.php">Strona główna</a>
+                <a href="przelew.php">Przelew</a>
+                <a href="historia.php">Historia transakcji</a>
+                <a href="logowanie.php">Wyloguj</a>
+            </nav>
+        <section>
+        ZALOGOWANY;
         # baza danych
         $serverName = "127.0.0.1";
         $userName = "root";
@@ -41,13 +48,27 @@
         $imie = $row["imie"];
         echo <<<HEREDOC
         Witaj $imie! <br>
-        Twoje saldo wynosi: $saldo PLN<br>
-        <a href="przelew.html">Przelew</a><br>
+        Twoje saldo wynosi: $saldo zł<br>
+        <a href="przelew.php">Przelew</a><br>
         <a href="historia.php">Pełna historia</a>
         HEREDOC;
         $connect->close();
-
+        echo "</section>";
+    }
+    else
+    {
+        echo <<<NIEZALOGOWANY
+        <nav>
+            <a href="index.php">Strona główna</a>
+            <a href="logowanie.php">Logowanie</a>
+            <a href="rejestracja.php">Rejestracja</a>
+        </nav>
+        <section>
+            <h2>To jest bank</h2>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolores aliquid commodi similique, at optio harum porro ipsum reprehenderit perspiciatis! Voluptas illo quaerat similique ut optio quia perspiciatis cupiditate doloremque facilis.</p>
+        </section>
+        NIEZALOGOWANY;
+    }
     ?>
-    
 </body>
 </html>

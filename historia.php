@@ -13,15 +13,37 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="rejestracja.html">rejestracja</a>
-        <a href="logowanie.html">logowanie</a>
-        <a href="index.php">index</a>
-        <a href="przelew.html">przelew</a>
-        <a href="historia.php">historia</a>
-    </nav>
+    <header>
+        <h1>Bank</h1>
+    </header>
     <?php
         session_start();
+        if(isset($_SESSION["email"]))
+        {
+            echo <<<ZALOGOWANY
+                <nav>
+                    <a href="index.php">Strona główna</a>
+                    <a href="przelew.php">Przelew</a>
+                    <a href="historia.php">Historia transakcji</a>
+                    <a href="logowanie.php">Wyloguj</a>
+                </nav>
+            <section>
+                <h2>Historia transakcji</h2>
+            ZALOGOWANY;
+        }
+        else
+        {
+            echo <<<NIEZALOGOWANY
+            <nav>
+                <a href="index.php">Strona główna</a>
+                <a href="logowanie.php">Logowanie</a>
+                <a href="rejestracja.php">Rejestracja</a>
+            </nav>
+            <section>
+                <p>Nie masz dostępu do tej strony. <a href="logowanie.php">Zaloguj się</a></p>
+            </section>
+            NIEZALOGOWANY;
+        }
         # baza danych
         $serverName = "127.0.0.1";
         $userName = "root";
@@ -45,7 +67,7 @@
             echo <<<HEREDOC
             <table>
                     <tr>
-                        <th>Email</th>
+                        <th>Odbiorca</th>
                         <th>Kwota</th>
                         <th>Data</th>
                     </tr>
@@ -59,7 +81,7 @@
                 
                     <tr>
                         <td>$email</td>
-                        <td>$kwota</td>
+                        <td>$kwota zł</td>
                         <td>$data</td>
                     </tr>
                 HEREDOC;
