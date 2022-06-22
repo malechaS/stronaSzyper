@@ -36,9 +36,9 @@
         {
             echo "Błąd";
         } 
-        $id = $_SESSION["id"];
+        $email = $_SESSION["email"];
         
-        $sql = "SELECT `stanKonta`, `imie` FROM `users` WHERE `id` = '$id';";
+        $sql = "SELECT `stanKonta`, `imie` FROM `users` WHERE `email` = '$email';";
         
         $result = $connect->query($sql);
         $row = $result->fetch_assoc();

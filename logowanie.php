@@ -70,10 +70,10 @@
             if ($result->num_rows > 0) 
             {
                 $row = $result->fetch_assoc();
-                $id = $row["id"];
                 if($row["haslo"] == $password)
                 {
                     $_SESSION["email"] = $email;
+                    $_SESSION["id"] = $row["id"];
                     echo "Zalogowano <br>Za 5 sekund nastąpi przekierowanie na stronę główną.";
                     header("Refresh: 5; index.php");
                 }

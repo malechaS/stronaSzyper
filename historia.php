@@ -56,11 +56,12 @@
         {
             echo "Błąd";
         } 
-        $id = $_SESSION["id"];
+        $email = $_SESSION["email"];
+        $nadawcaID = $_SESSION["id"];
 
         $sql = "SELECT `email`, `transactions`.`kwota`, `transactions`.`data` FROM `transactions` 
         INNER JOIN `users` ON `users`.`id` = `transactions`.`idOdbiorcy` 
-        WHERE `transactions`.`idNadawcy` = '$id';";
+        WHERE `transactions`.`idNadawcy` = '$nadawcaID';";
         $result = $connect->query($sql);
         if($result->num_rows > 0)
         {
