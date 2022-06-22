@@ -62,7 +62,7 @@
         $passwordSecond = $_POST["passwordSecond"];
         if($passwordFirst == $passwordSecond)
         {
-            $password = $passwordFirst;
+            $password = password_hash($passwordFirst, PASSWORD_DEFAULT);
         }
         # baza danych
         $serverName = "127.0.0.1";

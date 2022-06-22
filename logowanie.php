@@ -70,7 +70,7 @@
             if ($result->num_rows > 0) 
             {
                 $row = $result->fetch_assoc();
-                if($row["haslo"] == $password)
+                if(password_verify($password, $row["haslo"]))
                 {
                     $_SESSION["email"] = $email;
                     $_SESSION["id"] = $row["id"];
