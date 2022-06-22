@@ -6,21 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strona</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
     <header>
         <h1>Bank</h1>
-    </header>
         <?php
+        $wiadomosc = "";
         session_start();
         if(isset($_SESSION["email"]))
         {
+            $imie = $_SESSION["imie"];
             echo <<<ZALOGOWANY
+            <div class="username">
+                <h4>$imie</h4>
+                <a href="logowanie.php"><span class="material-symbols-outlined">logout</span></a>
+            </div>
+            </header>
                 <nav>
                     <a href="index.php">Strona główna</a>
                     <a href="przelew.php">Przelew</a>
                     <a href="historia.php">Historia transakcji</a>
-                    <a href="logowanie.php">Wyloguj</a>
                 </nav>
             <section>
                 <h2>Formularz przelewu</h2>
@@ -36,6 +42,7 @@
         else
         {
             echo <<<NIEZALOGOWANY
+            </header>
             <nav>
                 <a href="index.php">Strona główna</a>
                 <a href="logowanie.php">Logowanie</a>
@@ -61,18 +68,13 @@
             $userPassword = "";
             $databaseName = "bank";
 
-
             $connect = new mysqli($serverName, $userName, $userPassword, $databaseName);
 
             if($connect->connect_error) 
             {
-                echo "Błąd";
+                $wiadomosc = "Błąd połączenia z bazą danych";
             } 
-            # nadawca
-            $sql = "SELECT `stanKonta` FROM `users` WHERE `id` = '$nadawcaID';";
-            $result = $connect->query($sql);
-            $row = $result->fetch_assoc();
-            $saldoNadawcy = $row["stanKonta"] - $_POST["kwota"];
+            $saldoNadawcy = $_SESSION["saldo"] - $_POST["kwota"];
 
             if($saldoNadawcy >= 0)
             {
@@ -87,15 +89,15 @@
                 $sql .= "UPDATE `users` SET `stanKonta`='$saldoNadawcy' WHERE `id` = '$nadawcaID';";
                 if($connect->multi_query($sql) === TRUE)
                 {
-                    echo "Przelew został wykonany";
+                    $wiadomosc = "Przelew został wykonany";
                 }
             }
             else
             {
-                echo "Brak środków na koncie.";
+                $wiadomosc = "Brak środków na koncie.";
             }
             $connect->close();
-            echo "</section>";
+            echo $wiadomosc."</section>";
         }
         ?>
     </section>

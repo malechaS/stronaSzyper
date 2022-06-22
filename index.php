@@ -6,58 +6,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strona</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
 </head>
 <body>
     <header>
         <h1>Bank</h1>
-    </header>
     <?php
     session_start();
     if(isset($_SESSION["email"]))
     {
-        echo <<<ZALOGOWANY
+        if($_SESSION["uprawnienia"] == 0)
+        {
+            $imie = $_SESSION["imie"];
+            echo <<<ZALOGOWANY
+                <div class="username">
+                    <h4>$imie</h4>
+                    <a href="logowanie.php"><span class="material-symbols-outlined">logout</span></a>
+                </div>
+            </header>
             <nav>
                 <a href="index.php">Strona główna</a>
                 <a href="przelew.php">Przelew</a>
                 <a href="historia.php">Historia transakcji</a>
-                <a href="logowanie.php">Wyloguj</a>
             </nav>
-        <section>
-        ZALOGOWANY;
-        # baza danych
-        $serverName = "127.0.0.1";
-        $userName = "root";
-        $userPassword = "";
-        $databaseName = "bank";
+            ZALOGOWANY;
 
-        $connect = new mysqli($serverName, $userName, $userPassword, $databaseName);
+            $saldo = $_SESSION["saldo"];
+            $imie = $_SESSION["imie"];
+            echo <<<HEREDOC
+            <section>
+                Witaj $imie! <br>
+                Twoje saldo wynosi: $saldo zł<br>
+            </section>
+            HEREDOC;
 
-        if($connect->connect_error) 
+            echo "";
+        }
+        else
         {
-            echo "Błąd";
-        } 
-        $email = $_SESSION["email"];
-        
-        $sql = "SELECT `stanKonta`, `imie` FROM `users` WHERE `email` = '$email';";
-        
-        $result = $connect->query($sql);
-        $row = $result->fetch_assoc();
-        $_SESSION["saldo"] = $row["stanKonta"];
+            echo <<<NAWIGACJA
+                <div class="username">
+                    <h4>Konto serwisowe</h4>
+                    <a href="logowanie.php"><span class="material-symbols-outlined">logout</span></a>
+                    <a href=""><span class="material-symbols-outlined">settings</span></a>
+                </div>
+            </header>
+            <nav>
+                <a href="index.php">Strona główna</a>
+                <a href="uzytkownicy.php">Użytkownicy</a>
+                <a href="historia.php">Transakcje</a>
+            </nav>
+            NAWIGACJA;
 
-        $saldo = $row["stanKonta"];
-        $imie = $row["imie"];
-        echo <<<HEREDOC
-        Witaj $imie! <br>
-        Twoje saldo wynosi: $saldo zł<br>
-        <a href="przelew.php">Przelew</a><br>
-        <a href="historia.php">Pełna historia</a>
-        HEREDOC;
-        $connect->close();
-        echo "</section>";
+            echo <<<WIADOMOSC
+            <section>
+                <p>To jest konto serwisowe</p>
+            </section>
+            WIADOMOSC;
+        }
+        
     }
     else
     {
         echo <<<NIEZALOGOWANY
+        </header>
         <nav>
             <a href="index.php">Strona główna</a>
             <a href="logowanie.php">Logowanie</a>

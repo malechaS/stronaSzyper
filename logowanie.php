@@ -6,21 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strona</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
     <header>
         <h1>Bank</h1>
-    </header>
     <?php
+    $wiadomosc = "";
     session_start();
     if(isset($_SESSION["email"]))
     {
+        $imie = $_SESSION["imie"];
         echo <<<ZALOGOWANY
+        <div class="username">
+            <h4>$imie</h4>
+            <a href="logowanie.php"><span class="material-symbols-outlined">logout</span></a>
+        </div>
+        </header>
             <nav>
                 <a href="index.php">Strona główna</a>
                 <a href="przelew.php">Przelew</a>
                 <a href="historia.php">Historia transakcji</a>
-                <a href="logowanie.php">Wyloguj</a>
             </nav>
         <section>
         ZALOGOWANY;
@@ -31,6 +37,7 @@
     else
     {
         echo <<<NIEZALOGOWANY
+        </header>
         <nav>
             <a href="index.php">Strona główna</a>
             <a href="logowanie.php">Logowanie</a>
@@ -49,46 +56,55 @@
     }
     if($_SERVER["REQUEST_METHOD"] == "POST")
         {
-            # TODO Dodać walidację pól
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-
-            # baza danych
-            $serverName = "127.0.0.1";
-            $userName = "root";
-            $userPassword = "";
-            $databaseName = "bank";
-
-            $connect = new mysqli($serverName, $userName, $userPassword, $databaseName);
-
-            if($connect->connect_error) 
+            if(!empty($_POST["email"]) and !empty($_POST["password"]))
             {
-                echo "Błąd";
-            } 
-            $sql = "SELECT `id`, `haslo` FROM `users` WHERE `email` = '$email';";
-            $result = $connect->query($sql);
-            if ($result->num_rows > 0) 
-            {
-                $row = $result->fetch_assoc();
-                if(password_verify($password, $row["haslo"]))
+                $email = $_POST["email"];
+                $password = $_POST["password"];
+    
+                # baza danych
+                $serverName = "127.0.0.1";
+                $userName = "root";
+                $userPassword = "";
+                $databaseName = "bank";
+    
+                $connect = new mysqli($serverName, $userName, $userPassword, $databaseName);
+    
+                if($connect->connect_error) 
                 {
-                    $_SESSION["email"] = $email;
-                    $_SESSION["id"] = $row["id"];
-                    echo "Zalogowano <br>Za 5 sekund nastąpi przekierowanie na stronę główną.";
-                    header("Refresh: 5; index.php");
-                }
-                else
+                    $wiadomosc = "Błąd połączenia z bazą danych";
+                } 
+                $sql = "SELECT `id`, `haslo`, `imie`, `stanKonta`, `uprawnienia` FROM `users` WHERE `email` = '$email';";
+                $result = $connect->query($sql);
+                if ($result->num_rows > 0) 
                 {
-                    echo "Niepoprawne hasło";
+                    $row = $result->fetch_assoc();
+                    if(password_verify($password, $row["haslo"]))
+                    {
+                        $_SESSION["email"] = $email;
+                        $_SESSION["id"] = $row["id"];
+                        $_SESSION["imie"] = $row["imie"];
+                        $_SESSION["saldo"] = $row["stanKonta"];
+                        $_SESSION["uprawnienia"] = $row["uprawnienia"];
+                        $wiadomosc = "Zalogowano <br>Za 5 sekund nastąpi przekierowanie na stronę główną.";
+                        header("Refresh: 5; index.php");
+                    }
+                    else
+                    {
+                        $wiadomosc = "Niepoprawne hasło";
+                    }
+                } 
+                else 
+                {
+                    $wiadomosc = "Nie istnieje takie konto";
                 }
-            } 
-            else 
-            {
-                echo "Nie istnieje takie konto";
+                $connect->close();
             }
-            $connect->close();
-            echo "</section>";
+            else
+            {
+                $wiadomosc = "Wypełnij wszystkie pola";
+            }
         }
+        echo $wiadomosc."</section>";
     ?>
 </body>
 </html>
